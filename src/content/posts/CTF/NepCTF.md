@@ -1,8 +1,13 @@
-# NepCTF
+---
+title: NepCTF WP
+published: 2025-07-28
+category: CTF
+description: " "
+---
 
 ## Realme
 
-有两处反调试和smc
+有两处反调试和 smc
 
 ![image](assets/image-20250727191758-5u5opgd.png)
 
@@ -10,7 +15,7 @@
 
 ![image](assets/image-20250727191816-1e491jv.png)
 
-peb反调
+peb 反调
 
 然后就能得到正确执行流
 
@@ -18,7 +23,7 @@ peb反调
 
 ![image](assets/image-20250727192036-ljnq1y3.png)
 
-这里直接取ksa后的sbox了
+这里直接取 ksa 后的 sbox 了
 
 ```c
 #include <stdio.h>
@@ -63,25 +68,25 @@ int main()
 
 ![image](assets/image-20250727192448-1939ufh.png)
 
-主程序逻辑很清晰，获取name的sign 然后 再获取name后面加Showmaker11的sign
+主程序逻辑很清晰，获取 name 的 sign 然后 再获取 name 后面加 Showmaker11 的 sign
 
-然后把第一个sign做key，第二个sign做密文进行aes加密然后验证
+然后把第一个 sign 做 key，第二个 sign 做密文进行 aes 加密然后验证
 
-sign和aes均来自libcrypt.dll
+sign 和 aes 均来自 libcrypt.dll
 
 ![image](assets/image-20250727192643-focn75q.png)
 
 ![image](assets/image-20250727192811-bcnp483.png)
 
-dll被混淆了，还进行了字符串加密
+dll 被混淆了，还进行了字符串加密
 
-通过解密后的字符串得到此题aes128的源码
+通过解密后的字符串得到此题 aes128 的源码
 
 ![image](assets/image-20250727192914-8268qll.png)
 
 并且发现被内联的函数都被放在了一起
 
-最终发现只在`mixColumns`​函数中加了一个异或
+最终发现只在`mixColumns`​ 函数中加了一个异或
 
 ![image](assets/image-20250727193141-3wez43y.png)
 
@@ -591,15 +596,15 @@ int main()
 
 ![image](assets/image-20250727193627-z7esp0i.png)
 
-直接在解密函数处下断点，找到返回的failed后再向上回溯即可
+直接在解密函数处下断点，找到返回的 failed 后再向上回溯即可
 
-最终在 0x14002B2D0找到处理函数
+最终在 0x14002B2D0 找到处理函数
 
-在0x14000FCE0找到加密函数
+在 0x14000FCE0 找到加密函数
 
 ![image](assets/image-20250727194337-zge90vd.png)
 
-变种xtea
+变种 xtea
 
 ```c
 #include <stdio.h>
@@ -655,21 +660,21 @@ int main()
 
 根据提示找到[ethangreen-dev/lovely-injector at v0.8.0](https://github.com/ethangreen-dev/lovely-injector/tree/v0.8.0)
 
-发现version.dll其实是一个mod的注入器
+发现 version.dll 其实是一个 mod 的注入器
 
 ![image](assets/image-20250727194845-xo8l35l.png)
 
-这是源码中应用patch的部分
+这是源码中应用 patch 的部分
 
 通过字符串直接定位到关键位置
 
-在dll的这个函数下断点
+在 dll 的这个函数下断点
 
 ![image](assets/image-20250727200328-zmg0ut1.png)
 
-在加载main.lua的时候跳转到这个位置
+在加载 main.lua 的时候跳转到这个位置
 
-可以看到刚才源代码中的hash
+可以看到刚才源代码中的 hash
 
 ![image](assets/image-20250727200430-pmfulrm.png)
 
@@ -679,7 +684,7 @@ int main()
 
 找到被修改的部分
 
-直接加载编译后的lua脚本进行验证
+直接加载编译后的 lua 脚本进行验证
 
 尝试了一堆反编译工具，最终找到[weaweawe01/luajit_decompile at 1.0](https://github.com/weaweawe01/luajit_decompile/tree/1.0)可以进行反编译
 
@@ -857,7 +862,7 @@ io.write("\n")
 230, 210, 245, 223, 98, 97, 151, 114, 63, 90, 139, 78, 204, 42, 227, 68, 202, 55, 242, 163, 103, 108, 231, 197, 142, 255, 180, 98, 123, 0, 184, 145, 164, 171, 247, 41, 92, 21, 89, 100, 22, 125, 87, 98, 10, 142, 70, 107, 101, 142, 60, 65, 168, 214, 243
 ```
 
-再根据main.lua的rc4解密
+再根据 main.lua 的 rc4 解密
 
 ![image](assets/image-20250727201007-y97pn85.png)
 
@@ -873,15 +878,15 @@ void swap(unsigned char *a, unsigned char *b)
 }
 void init_sbox(unsigned char key[])
 {
-  for (unsigned int i = 0; i < 256; i++) 
+  for (unsigned int i = 0; i < 256; i++)
     sbox[i] = i;
   unsigned int keyLen = strlen((char *)key);
   unsigned char Ttable[256] = {0};
   for (int i = 0; i < 256; i++)
-    Ttable[i] = key[i % keyLen]; 
+    Ttable[i] = key[i % keyLen];
   for (int j = 0, i = 0; i < 256; i++)
   {
-    j = (j + sbox[i] + key[i % keyLen]) % 256; 
+    j = (j + sbox[i] + key[i % keyLen]) % 256;
     swap(&sbox[i], &sbox[j]);
   }
 }
@@ -895,7 +900,7 @@ void RC4(unsigned char data[])
     j = (j + sbox[i]) % 256;
     swap(&sbox[i], &sbox[j]);
     t = (sbox[i] + sbox[j]) % 256;
-    k = sbox[t]; 
+    k = sbox[t];
     data[h] = (data[h] - k + 256) % 256;
   }
 }
