@@ -76,7 +76,7 @@ onTap 是按钮的点击事件回调函数，以这个函数为入口来分析
 
 ![image](assets/image-20250731095708-zluv6xv.png)
 
-loadInput -> checkLen -> loadKey -> encrypt -> loadencData -> compare -> output
+loadInput -> checkLen -> enc1 -> enc2 -> loadencData -> compare -> output
 
 ## checkLen
 
@@ -98,7 +98,7 @@ frida hook 这里输出 w2 的值
 
 那正确的长度应该为 64
 
-## loadKey
+## enc1
 
 检查完长度之后，程序进入了两个 8\*8 的循环之中
 
@@ -136,7 +136,7 @@ frida hook 这里输出 w2 的值
 
 那另一个矩阵即为 key
 
-## encrypt
+## enc2
 
 发现密文长得非常奇怪
 
