@@ -1,8 +1,9 @@
+---
 title: NepCTF Flutterpro 复现
 published: 2025-07-31
 category: CTF
 description: " "
-
+---
 # Blutter 静态恢复数据
 
 这道题的绝大部分 section 信息都被抹除，而 blutter 又依赖于 section 信息去定位 所需的 dart 信息，所以直接使用 blutter 去解析会直接报错
