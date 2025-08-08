@@ -1,5 +1,5 @@
 ---
-title: NepCTF Flutterpro 复现
+title: NepCTF Flutterpro
 published: 2025-07-31
 category: CTF
 description: " "
